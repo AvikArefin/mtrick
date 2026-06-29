@@ -55,4 +55,4 @@ uv run mtrick
 ```
 
 ## Changelog
-[See CHANGELOG.md](CHANGELOG.md)
+[See CHANGELOG.md](https://github.com/AvikArefin/mtrick/blob/main/CHANGELOG.md)
