@@ -1,0 +1,139 @@
+import socket
+import http.server
+import socketserver
+import json
+import os
+import urllib.parse
+import argparse
+from typing import Any
+
+
+def local_network_ip() -> None:
+    # Create a dummy socket to find the interface used for external routing
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # We use a public IP address (Google's DNS) and port.
+        # No actual connection or packet is sent over the network.
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+    except Exception:
+        # Fallback to loopback if no active network connection exists
+        local_ip = "127.0.0.1"
+    finally:
+        s.close()
+        print(f"Local Network IP Address: {local_ip}")
+
+        
+class DashboardServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
+    def __init__(
+        self, server_address, handler_class, tracker_dir="metrics"
+    ):
+        self.tracker_dir = tracker_dir
+
+        super().__init__(server_address, handler_class)
+
+
+class DashboardHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        parsed_path = urllib.parse.urlparse(self.path)
+        assert isinstance(self.server, DashboardServer)
+        tracker_dir = self.server.tracker_dir
+
+        # API Endpoint to get all runs
+        if parsed_path.path == "/api/runs":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json; charset=utf-8")
+            # Add CORS headers just in case
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            runs = []
+            if os.path.exists(tracker_dir):
+                for dir_name in sorted(os.listdir(tracker_dir), reverse=True):
+                    dir_path = os.path.join(tracker_dir, dir_name)
+                    if os.path.isdir(dir_path):
+                        meta_path = os.path.join(dir_path, "meta.json")
+                        meta: dict[str, Any] = {}
+                        if os.path.exists(meta_path):
+                            with open(meta_path, "r") as f:
+                                meta = json.load(f)
+                        else:
+                            meta = {"experiment_name": dir_name, "timestamp": "Unknown"}
+                        meta["folder"] = dir_name
+                        try:
+                            meta["files"] = os.listdir(dir_path)
+                        except Exception:
+                            meta["files"] = []
+                        runs.append(meta)
+
+            # print(runs)
+            self.wfile.write(json.dumps(runs).encode("utf-8"))
+            return
+
+
+        # Serve the dashboard index for root path
+        elif parsed_path.path == "/":
+            self.send_response(200)
+            self.send_header("Content-type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
+            self.end_headers()
+
+            static_dir = os.path.join(os.path.dirname(__file__), "static")
+            index_path = os.path.join(static_dir, "index.html")
+
+            with open(index_path, "rb") as f:
+                self.wfile.write(f.read())
+            return
+
+        # Serve run data files (CSV / JSON) from tracker directory
+        else:
+            # only serve files that resolve inside TRACKER_DIR
+            requested = urllib.parse.unquote(parsed_path.path).lstrip("/")
+            tracker_root = os.path.realpath(tracker_dir)
+            local_path = os.path.realpath(os.path.join(tracker_dir, requested))
+            if not local_path.startswith(tracker_root + os.sep) or not os.path.isfile(
+                local_path
+            ):
+                self.send_error(404, "Not Found")
+                return
+            self.send_response(200)
+            if local_path.endswith(".json") or local_path.endswith(".jsonl"):
+                content_type = "application/json; charset=utf-8"
+            else:
+                content_type = "text/plain; charset=utf-8"
+            self.send_header("Content-type", content_type)
+            self.end_headers()
+            with open(local_path, "rb") as f:
+                self.wfile.write(f.read())
+
+
+def main():
+    local_network_ip()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=8000, help="Port to run on")
+    parser.add_argument(
+        "--tracker-dir",
+        type=str,
+        default="metrics",
+        help="Local directory to scan for runs",
+    )
+    args = parser.parse_args()
+
+    port = args.port
+    tracker_dir = args.tracker_dir
+
+    with DashboardServer(
+        ("", port), DashboardHandler, tracker_dir=tracker_dir
+    ) as httpd:
+        print(f"🚀 Dashboard is live! Ctrl / Cmd Click >>> http://localhost:{port} <<<")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nShutting down dashboard...")
+
+
+if __name__ == "__main__":
+    main()

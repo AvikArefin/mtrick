@@ -1,0 +1,26 @@
+[project]
+name = "mtrick"
+version = "0.1.1"
+description = "A local-first, simple ML experiment tracker"
+readme = "README.md"
+authors = [
+    { name = "Avik Arefin", email = "avik.me.arefin@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Repository = "https://github.com/AvikArefin/mtrick"
+
+[project.scripts]
+mtrick = "mtrick.dashboard:main"
+
+[build-system]
+requires = ["uv_build>=0.10.4,<0.11.0"]
+build-backend = "uv_build"
