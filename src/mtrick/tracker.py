@@ -4,7 +4,7 @@ import json
 import subprocess
 from datetime import datetime
 
-class MTracker:
+class Tracker:
     def __init__(
         self,
         experiment_name: str,

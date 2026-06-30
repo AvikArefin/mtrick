@@ -7,7 +7,7 @@ def main():
     # 1. Initialize the tracker
     # This automatically creates a new run directory inside 'metrics'
     print("Initializing Tracker...")
-    tracker = Tracker(experiment_name="demo_run", save_path="metrics")
+    tracker = Tracker(experiment_name="demo_run")
 
     # 2. Simulate training loop and log metrics
     print("Simulating 50 epochs of training...")
@@ -44,9 +44,7 @@ def main():
         [1, 2, 12],  # True Birds
     ]
     tracker.log_confusion_matrix(matrix, classes=classes)
-
-    print("\nExperiment tracking complete! Run directory created inside 'metrics'.")
-    print("You can now launch the dashboard to visualize this run.")
+    print("You can now launch the dashboard to visualize this run. `uv run mtrick`")
 
 if __name__ == "__main__":
     main()

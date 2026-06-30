@@ -1,6 +1,3 @@
-from .tracker import MTracker
+from .tracker import Tracker
 
-# For ease of import or standard naming
-Tracker = MTracker
-
-__all__ = ["MTracker", "Tracker"]
+__all__ = ["Tracker"]
