@@ -245,12 +245,12 @@
                     div.className = 'run-item';
                     const scriptText = run.source_script ? `<br><small style="color: #a855f7;">Script: ${esc(run.source_script)}</small>` : '';
                     div.innerHTML = `
-                        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; width: 100%; margin: 0;">
-                            <input type="checkbox" class="run-checkbox" value="${index}" style="margin-top: 4px;">
-                            <div style="flex: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%; margin: 0;">
+                            <input type="checkbox" class="run-checkbox" value="${index}" style="margin-top: 4px; cursor: pointer;">
+                            <div class="run-text" style="flex: 1; cursor: pointer;">
                                 <b>${esc(run.experiment_name) || 'Experiment'} #${esc(run.experiment_number) || '?'}</b><br><small>${esc(run.timestamp)}</small><br><small>Commit: ${esc(run.git_commit)}</small>${scriptText}
                             </div>
-                        </label>
+                        </div>
                     `;
                     const checkbox = div.querySelector('input');
                     checkbox.addEventListener('change', () => {
@@ -264,12 +264,29 @@
                         selectedRuns.sort((a, b) => allRuns.indexOf(a) - allRuns.indexOf(b));
                         loadMultipleRunsData();
                     });
+
+                    const textDiv = div.querySelector('.run-text');
+                    textDiv.addEventListener('click', () => {
+                        selectedRuns = [run];
+                        document.querySelectorAll('.run-checkbox').forEach(cb => {
+                            cb.checked = (cb === checkbox);
+                            const parentItem = cb.closest('.run-item');
+                            if (cb.checked) {
+                                parentItem.classList.add('active');
+                            } else {
+                                parentItem.classList.remove('active');
+                            }
+                        });
+                        loadMultipleRunsData();
+                    });
+
                     list.appendChild(div);
                 });
                 if (runs.length > 0) {
-                    const firstCb = list.querySelector('input');
-                    firstCb.checked = true;
-                    firstCb.dispatchEvent(new Event('change'));
+                    const checkboxes = list.querySelectorAll('input');
+                    const lastCb = checkboxes[checkboxes.length - 1];
+                    lastCb.checked = true;
+                    lastCb.dispatchEvent(new Event('change'));
                 }
             } catch (err) {
                 console.error("Failed to fetch runs:", err);

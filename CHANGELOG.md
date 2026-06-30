@@ -1,3 +1,6 @@
+# 0.1.5
+- Fix: Single select correctly selects single experiment and only selecting checkbox will do multi-select
+
 # 0.1.4
 - Chore: introduce verbose flag
 - Chore: pretty print runs on verbose flag
