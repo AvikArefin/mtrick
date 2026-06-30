@@ -1,3 +1,7 @@
+# 0.1.4
+- Chore: introduce verbose flag
+- Chore: pretty print runs on verbose flag
+
 # 0.1.3
 - Fix: logging to be formatted
 
