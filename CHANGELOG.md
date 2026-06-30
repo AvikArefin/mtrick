@@ -1,3 +1,6 @@
+# 0.1.3
+- Fix: logging to be formatted
+
 # 0.1.2
 - Fix: Use absolute GitHub URLs in README.
 

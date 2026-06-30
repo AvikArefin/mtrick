@@ -79,7 +79,8 @@ class MTracker:
         """
         Simplified logging API.
         """
-        print(f"{epoch:4d}| {metrics}")
+        formatted_metrics = ", ".join(f"{k}: {v:.4f}" for k, v in metrics.items())
+        print(f"{epoch:4d}| {formatted_metrics}")
 
         log_entry: dict[str, float] = {"epoch": epoch, **metrics}
         metrics_path = os.path.join(self.experiment_dir, "metrics.jsonl")
