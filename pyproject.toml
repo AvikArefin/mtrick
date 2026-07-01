@@ -1,7 +1,7 @@
 [project]
 name = "mtrick"
-version = "0.1.5"
-description = "A local-first, zero-config ML experiment tracker"
+version = "0.2.0"
+description = "A local, zero-config ML experiment tracker"
 readme = "README.md"
 authors = [
     { name = "Avik Arefin", email = "avik.me.arefin@gmail.com" }

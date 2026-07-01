@@ -1,3 +1,6 @@
+# 0.2.0
+- Feat: add editable per-run note and update UI components
+
 # 0.1.5
 - Fix: Single select correctly selects single experiment and only selecting checkbox will do multi-select
 

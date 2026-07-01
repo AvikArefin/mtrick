@@ -117,6 +117,43 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             with open(local_path, "rb") as f:
                 self.wfile.write(f.read())
 
+    def do_POST(self):
+        parsed_path = urllib.parse.urlparse(self.path)
+        assert isinstance(self.server, DashboardServer)
+        tracker_dir: str = self.server.tracker_dir
+
+        if parsed_path.path.startswith("/api/runs/") and parsed_path.path.endswith("/note"):
+            parts = parsed_path.path.split("/")
+            if len(parts) == 5:
+                folder_name = urllib.parse.unquote(parts[3])
+                
+                content_length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(content_length).decode("utf-8")
+                
+                try:
+                    data = json.loads(body)
+                    note = data.get("note", "")
+                    
+                    meta_path = os.path.join(tracker_dir, folder_name, "meta.json")
+                    if os.path.exists(meta_path):
+                        with open(meta_path, "r") as f:
+                            meta = json.load(f)
+                        meta["note"] = note
+                        with open(meta_path, "w") as f:
+                            json.dump(meta, f, indent=4)
+                            
+                        self.send_response(200)
+                        self.send_header("Content-type", "application/json")
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+                        return
+                except Exception as e:
+                    self.send_error(400, f"Bad Request: {e}")
+                    return
+        
+        self.send_error(404, "Not Found")
+
+
 
 def main():
     local_network_ip()

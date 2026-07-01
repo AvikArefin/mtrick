@@ -1,5 +1,5 @@
 # mtrick: Metrics Tracker
-A local-first simple ML experiment tracker with zero configurations required.
+A local simple ML experiment tracker with zero configurations required.
 
 ![Dashboard Interface](https://raw.githubusercontent.com/AvikArefin/mtrick/main/interface.png)
 
