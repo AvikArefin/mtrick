@@ -81,6 +81,28 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(runs).encode("utf-8"))
             return
 
+        # API Endpoint to get global config
+        elif parsed_path.path == "/api/config":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            config_path = os.path.join(tracker_dir, "global_config.json")
+            config = {"theme": "dark", "font": "monospace", "layout": "auto", "nonLine": "latest"}
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, "r") as f:
+                        config = json.load(f)
+                except Exception:
+                    pass
+            # Ensure all keys exist
+            config.setdefault("theme", "dark")
+            config.setdefault("font", "monospace")
+            config.setdefault("layout", "auto")
+            config.setdefault("nonLine", "latest")
+            self.wfile.write(json.dumps(config).encode("utf-8"))
+            return
 
         # Serve the dashboard index for root path
         elif parsed_path.path == "/":
@@ -150,6 +172,36 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 except Exception as e:
                     self.send_error(400, f"Bad Request: {e}")
                     return
+
+        elif parsed_path.path == "/api/config":
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8")
+            try:
+                data = json.loads(body)
+                theme = data.get("theme", "dark")
+                font = data.get("font", "monospace")
+                layout = data.get("layout", "auto")
+                nonLine = data.get("nonLine", "latest")
+                config = {
+                    "theme": theme,
+                    "font": font,
+                    "layout": layout,
+                    "nonLine": nonLine
+                }
+                
+                os.makedirs(tracker_dir, exist_ok=True)
+                config_path = os.path.join(tracker_dir, "global_config.json")
+                with open(config_path, "w") as f:
+                    json.dump(config, f, indent=4)
+                    
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "ok"}).encode("utf-8"))
+                return
+            except Exception as e:
+                self.send_error(400, f"Bad Request: {e}")
+                return
         
         self.send_error(404, "Not Found")
 

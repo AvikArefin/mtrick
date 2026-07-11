@@ -43,7 +43,7 @@ class Tracker:
         print(f"Tracking experiment at: {self.experiment_dir}")
 
     def get_git_commit(self) -> str:
-        """Returns the current short git commit hash, appending '-dirty' if uncommitted changes exist."""
+        """Returns the current short git commit hash, appending '*' if uncommitted changes exist."""
         try:
             commit_hash = (
                 subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
@@ -56,7 +56,7 @@ class Tracker:
                 .strip()
             )
             if status:
-                return f"{commit_hash}-dirty"
+                return f"{commit_hash}*"
             return commit_hash
         except Exception:
             return "unknown"

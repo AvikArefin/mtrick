@@ -1,3 +1,9 @@
+# 0.3.0
+- Feat: Change font family
+- Feat: Change plot color [temporary]
+- QOL: Hide / Unhide side bar
+- QOL: Dark Mode and Light Mode
+
 # 0.2.0
 - Feat: add editable per-run note and update UI components
 

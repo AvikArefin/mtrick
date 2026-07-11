@@ -1,6 +1,6 @@
 [project]
 name = "mtrick"
-version = "0.2.0"
+version = "0.3.0"
 description = "A local, zero-config ML experiment tracker"
 readme = "README.md"
 authors = [
