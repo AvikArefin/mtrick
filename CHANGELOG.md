@@ -1,3 +1,6 @@
+# 0.4.0
+- Feat: live update (polling)
+
 # 0.3.0
 - Feat: Change font family
 - Feat: Change plot color [temporary]

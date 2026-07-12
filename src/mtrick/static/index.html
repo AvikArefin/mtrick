@@ -14,28 +14,27 @@
         :root {
             /* Default/Dark Theme */
             --bg-body: #111;
-            --bg-sidebar: #1e1e1e;
             --bg-card: #1e1e1e;
             --border-color: #333;
             --border-active: #666;
             --text-color: #eee;
             --text-muted: #a1a1aa;
-            --bg-hover: #2a2a2a;
-            --bg-active: #333;
             --bg-input: #2a2a2a;
         }
 
         body.light-theme {
             --bg-body: #f8fafc;
-            --bg-sidebar: #ffffff;
             --bg-card: #ffffff;
             --border-color: #e2e8f0;
             --border-active: #94a3b8;
             --text-color: #0f172a;
             --text-muted: #64748b;
-            --bg-hover: #f1f5f9;
-            --bg-active: #e2e8f0;
             --bg-input: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important;
         }
 
         body {
@@ -46,20 +45,17 @@
             color: var(--text-color);
             height: 100vh;
             display: flex;
-            transition: background-color 0.2s, color 0.2s;
             overflow: hidden;
         }
 
         .sidebar {
             width: 320px;
-            background: var(--bg-sidebar);
+            background: var(--bg-card);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             padding: 20px;
             overflow: hidden;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s, background-color 0.2s;
-            box-sizing: border-box;
             flex-shrink: 0;
         }
 
@@ -83,16 +79,15 @@
             border: 1px solid var(--border-color);
             padding: 12px 14px;
             margin-bottom: 12px;
-            transition: background 0.2s, border-color 0.2s;
-            border-radius: 0 !important;
+            cursor: pointer;
         }
 
         .run-item:hover {
-            background: var(--bg-hover);
+            background: var(--bg-input);
         }
 
         .run-item.active {
-            background: var(--bg-active);
+            background: var(--border-color);
             border-color: var(--border-active);
         }
 
@@ -111,7 +106,6 @@
             display: flex;
             flex-direction: column;
             min-width: 0;
-            transition: background-color 0.2s, border-color 0.2s;
         }
 
         #dynamic-charts-container {
@@ -139,24 +133,17 @@
             font-size: 0.9em;
         }
 
-        .chart-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
         .chart-container {
             position: relative;
             width: 100%;
             height: 400px;
+            margin: 0 auto;
         }
 
         .chart-container.square-mode {
-            width: 100% !important;
-            height: auto !important;
+            height: auto;
             aspect-ratio: 1 / 1;
             max-width: 500px;
-            max-height: 500px;
         }
 
         pre code {
@@ -169,12 +156,7 @@
             border: 1px solid var(--border-color);
         }
 
-        button,
-        select,
-        input,
-        #run-warnings-container {
-            border-radius: 0 !important;
-        }
+
 
         .run-note-display[contenteditable="true"]:empty:before {
             content: attr(data-placeholder);
@@ -183,13 +165,7 @@
             display: block;
         }
 
-        .run-note-display {
-            color: #fff;
-        }
 
-        body.light-theme .run-note-display {
-            color: #000;
-        }
 
         .run-note-display[contenteditable="true"]:focus {
             border-color: #fbbf24 !important;
@@ -204,13 +180,10 @@
             width: 16px;
             height: 16px;
             border: 1px solid var(--border-color);
-            border-radius: 0;
             cursor: pointer;
             background: none;
             padding: 0;
             outline: none;
-            box-sizing: border-box;
-            transition: transform 0.1s ease;
         }
         .run-color-input:hover {
             transform: scale(1.15);
@@ -237,16 +210,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            border-radius: 0;
             outline: none;
         }
         .icon-btn:hover {
-            background: var(--bg-hover);
+            background: var(--bg-input);
             border-color: var(--border-active);
         }
         .icon-btn:active {
-            background: var(--bg-active);
+            background: var(--border-color);
         }
 
         /* Settings Modal Styles */
@@ -264,7 +235,6 @@
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal-overlay.open {
@@ -277,10 +247,8 @@
             border: 1px solid var(--border-color);
             width: 420px;
             max-width: 90%;
-            border-radius: 0;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
             transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
         }
@@ -316,7 +284,6 @@
             justify-content: center;
             width: 24px;
             height: 24px;
-            transition: color 0.2s;
         }
 
         .modal-close-btn:hover {
@@ -344,73 +311,22 @@
             letter-spacing: 0.05em;
         }
 
-        /* Custom Select Dropdown Styling */
-        .custom-select {
-            position: relative;
-            display: inline-block;
+        select {
+            display: block;
             width: 100%;
-            user-select: none;
-        }
-
-        .custom-select-trigger {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            height: 32px;
             padding: 5px 8px;
             background: var(--bg-input);
             color: var(--text-color);
             border: 1px solid var(--border-color);
-            cursor: pointer;
             font-family: inherit;
             font-size: 0.9em;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-            height: 32px;
-        }
-
-        .custom-select-trigger:focus {
-            border-color: var(--border-active);
             outline: none;
-        }
-
-        .custom-select.open .custom-select-trigger {
-            border-color: var(--border-active);
-        }
-
-        .custom-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border-active);
-            border-top: none;
-            z-index: 1010;
-            display: none;
-            max-height: 200px;
-            overflow-y: auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
-        }
-
-        .custom-select.open .custom-options {
-            display: block;
-        }
-
-        .custom-option {
-            padding: 6px 10px;
             cursor: pointer;
-            color: var(--text-color);
-            font-size: 0.9em;
-            transition: background 0.15s;
         }
 
-        .custom-option:hover {
-            background: var(--bg-hover);
-        }
-
-        .custom-option.selected {
-            background: var(--bg-active);
-            font-weight: 600;
+        select:focus {
+            border-color: var(--border-active);
         }
     </style>
 </head>
@@ -463,60 +379,45 @@
             <div class="modal-body">
                 <div class="setting-group">
                     <label>Theme</label>
-                    <div class="custom-select" id="theme-select-container">
-                        <div class="custom-select-trigger" tabindex="0">
-                            <span>Dark Theme</span>
-                            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px; flex-shrink: 0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
-                        <div class="custom-options">
-                            <div class="custom-option" data-value="dark">Dark Theme</div>
-                            <div class="custom-option" data-value="light">Light Theme</div>
-                        </div>
-                    </div>
+                    <select id="theme-select">
+                        <option value="dark">Dark Theme</option>
+                        <option value="light">Light Theme</option>
+                    </select>
                 </div>
                 <div class="setting-group">
                     <label>Plot Font</label>
-                    <div class="custom-select" id="font-select-container">
-                        <div class="custom-select-trigger" tabindex="0">
-                            <span>Monospace</span>
-                            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px; flex-shrink: 0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
-                        <div class="custom-options">
-                            <div class="custom-option" data-value="monospace">Monospace</div>
-                            <div class="custom-option" data-value="sans-serif">Sans-Serif</div>
-                            <div class="custom-option" data-value="serif">Serif</div>
-                            <div class="custom-option" data-value="times-new-roman">Times New Roman</div>
-                        </div>
-                    </div>
+                    <select id="font-select">
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-Serif</option>
+                        <option value="serif">Serif</option>
+                        <option value="times-new-roman">Times New Roman</option>
+                    </select>
                 </div>
                 <div class="setting-group">
                     <label>Columns Layout</label>
-                    <div class="custom-select" id="layout-select-container">
-                        <div class="custom-select-trigger" tabindex="0">
-                            <span>Auto (Smart)</span>
-                            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px; flex-shrink: 0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
-                        <div class="custom-options">
-                            <div class="custom-option" data-value="auto">Auto (Smart)</div>
-                            <div class="custom-option" data-value="1">1 Column</div>
-                            <div class="custom-option" data-value="2">2 Columns</div>
-                            <div class="custom-option" data-value="3">3 Columns</div>
-                        </div>
-                    </div>
+                    <select id="layout-select">
+                        <option value="auto">Auto (Smart)</option>
+                        <option value="1">1 Column</option>
+                        <option value="2">2 Columns</option>
+                        <option value="3">3 Columns</option>
+                    </select>
                 </div>
                 <div class="setting-group">
                     <label>Non-Line Charts</label>
-                    <div class="custom-select" id="non-line-select-container">
-                        <div class="custom-select-trigger" tabindex="0">
-                            <span>Show Latest</span>
-                            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px; flex-shrink: 0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </div>
-                        <div class="custom-options">
-                            <div class="custom-option" data-value="latest">Show Latest</div>
-                            <div class="custom-option" data-value="all">Show All</div>
-                            <div class="custom-option" data-value="none">Show None</div>
-                        </div>
-                    </div>
+                    <select id="non-line-select">
+                        <option value="latest">Show Latest</option>
+                        <option value="all">Show All</option>
+                        <option value="none">Show None</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Auto-poll Interval</label>
+                    <select id="poll-select">
+                        <option value="off">Off</option>
+                        <option value="1">1 Second</option>
+                        <option value="2">2 Seconds</option>
+                        <option value="5">5 Seconds</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -542,8 +443,11 @@
         let currentFont = 'monospace';
         let currentLayout = 'auto';
         let currentNonLine = 'latest';
+        let currentPollInterval = 'off';
+        let pollIntervalId = null;
+        let isFetchingRuns = false;
 
-        let themeSelect, fontSelect, layoutSelect, nonLineSelect;
+        let themeSelect, fontSelect, layoutSelect, nonLineSelect, pollSelect;
 
         async function loadConfig() {
             try {
@@ -555,16 +459,43 @@
                     currentLayout = config.layout || 'auto';
                     currentNonLine = config.nonLine || 'latest';
                     
-                    if (themeSelect) themeSelect.setValue(currentTheme);
-                    if (fontSelect) fontSelect.setValue(currentFont);
-                    if (layoutSelect) layoutSelect.setValue(currentLayout);
-                    if (nonLineSelect) nonLineSelect.setValue(currentNonLine);
+                    if (themeSelect) themeSelect.value = currentTheme;
+                    if (fontSelect) fontSelect.value = currentFont;
+                    if (layoutSelect) layoutSelect.value = currentLayout;
+                    if (nonLineSelect) nonLineSelect.value = currentNonLine;
                     
                     applyLayout(false);
                     applyPreferences(false); // don't redraw charts during initial load since they aren't created yet
                 }
             } catch (err) {
                 console.error("Failed to load global config:", err);
+            }
+        }
+
+        function loadPollInterval() {
+            currentPollInterval = localStorage.getItem('poll-interval') || 'off';
+            if (pollSelect) pollSelect.value = currentPollInterval;
+            applyPollInterval();
+        }
+
+        function applyPollInterval() {
+            if (pollIntervalId) {
+                clearInterval(pollIntervalId);
+                pollIntervalId = null;
+            }
+            if (currentPollInterval !== 'off') {
+                const intervalMs = parseInt(currentPollInterval) * 1000;
+                pollIntervalId = setInterval(async () => {
+                    if (isFetchingRuns) return;
+                    isFetchingRuns = true;
+                    try {
+                        await fetchRuns();
+                    } catch (err) {
+                        console.error("Polling error:", err);
+                    } finally {
+                        isFetchingRuns = false;
+                    }
+                }, intervalMs);
             }
         }
 
@@ -602,20 +533,15 @@
 
         function applyPreferences(redrawCharts = true) {
             // Apply theme class
-            if (currentTheme === 'light') {
-                document.body.classList.add('light-theme');
-            } else {
-                document.body.classList.remove('light-theme');
-            }
+            document.body.classList.toggle('light-theme', currentTheme === 'light');
 
             // Update Chart.js default font family
-            let fontName = 'monospace';
-            if (currentFont === 'sans-serif') fontName = "'Inter', system-ui, -apple-system, sans-serif";
-            else if (currentFont === 'serif') fontName = "'Lora', Georgia, Cambria, serif";
-            else if (currentFont === 'times-new-roman') fontName = "'Times New Roman', Times, Baskerville, Georgia, serif";
-            else fontName = "'Fira Code', monospace";
-
-            Chart.defaults.font.family = fontName;
+            const fontMap = {
+                'sans-serif': "'Inter', system-ui, -apple-system, sans-serif",
+                'serif': "'Lora', Georgia, Cambria, serif",
+                'times-new-roman': "'Times New Roman', Times, Baskerville, Georgia, serif"
+            };
+            Chart.defaults.font.family = fontMap[currentFont] || "'Fira Code', monospace";
 
             // Re-render charts to pick up theme/font changes
             if (redrawCharts) {
@@ -680,6 +606,25 @@
                 const response = await fetch('/api/runs');
                 const runs = await response.json();
                 allRuns = runs;
+
+                // Avoid rebuilding sidebar UI if a note is currently focused (to prevent cursor jumping)
+                const activeNote = document.activeElement && document.activeElement.classList.contains('run-note-display');
+                if (activeNote) {
+                    selectedRuns.forEach(selectedRun => {
+                        const updated = runs.find(r => r.folder === selectedRun.folder);
+                        if (updated) {
+                            selectedRun.files = updated.files;
+                            selectedRun.charts = updated.charts;
+                        }
+                    });
+                    await loadMultipleRunsData();
+                    return;
+                }
+
+                // Preserve selections
+                const selectedFolders = new Set(selectedRuns.map(r => r.folder));
+                selectedRuns = [];
+
                 const list = document.getElementById('runs-list');
                 list.innerHTML = '';
                 runs.forEach((run, index) => {
@@ -688,9 +633,16 @@
                     const scriptText = run.source_script ? ` &bull; <span style="color: #a855f7;">${esc(run.source_script)}</span>` : '';
                     const noteText = run.note || '';
                     const runColor = customRunColors[run.folder] || RUN_COLORS[index % RUN_COLORS.length];
+                    
+                    const shouldBeChecked = selectedFolders.has(run.folder);
+                    if (shouldBeChecked) {
+                        div.classList.add('active');
+                        selectedRuns.push(run);
+                    }
+
                     div.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
-                            <input type="checkbox" class="run-checkbox" value="${index}" style="cursor: pointer; margin: 0; flex-shrink: 0;">
+                            <input type="checkbox" class="run-checkbox" value="${index}" style="cursor: pointer; margin: 0; flex-shrink: 0;" ${shouldBeChecked ? 'checked' : ''}>
                             <input type="color" class="run-color-input" value="${runColor}" title="Change color for visualization" style="margin: 0; flex-shrink: 0;">
                             <b class="run-title-text" style="flex: 1; word-break: break-word; cursor: pointer; font-size: 1.0em; padding-left: 2px;">${esc(run.experiment_name) || 'Experiment'} #${esc(run.experiment_number) || '?'}</b>
                         </div>
@@ -699,7 +651,7 @@
                                 ${esc((run.timestamp||'').replace(/(....)(..)(..)_(..)(..)(..)/, "$1-$2-$3 $4:$5:$6"))} &bull; ${esc(run.git_commit)}${scriptText}
                             </div>
                             <div class="run-note-container" style="margin-top: 8px; font-size: 0.85em;">
-                                <div class="run-note-display" contenteditable="true" data-placeholder="Add a note..." style="word-break: break-word; padding: 4px 6px; background: rgba(0,0,0,0.2); border: 1px dashed transparent; min-height: 1.2em; border-radius: 0; outline: none; transition: border 0.2s; cursor: text; line-height: 1.2;">${esc(noteText)}</div>
+                                <div class="run-note-display" contenteditable="true" data-placeholder="Add a note..." style="word-break: break-word; padding: 4px 6px; background: rgba(0,0,0,0.2); border: 1px dashed transparent; min-height: 1.2em; border-radius: 0; outline: none; cursor: text; line-height: 1.2;">${esc(noteText)}</div>
                             </div>
                         </div>
                     `;
@@ -726,23 +678,17 @@
                         e.stopPropagation();
                     });
 
-                    const titleTextEl = div.querySelector('.run-title-text');
-                    const detailsBoxEl = div.querySelector('.run-details-box');
-                    const handleSelect = () => {
+                    div.addEventListener('click', (e) => {
+                        if (e.target.closest('.run-checkbox') || e.target.closest('.run-color-input') || e.target.closest('.run-note-display')) {
+                            return;
+                        }
                         selectedRuns = [run];
                         document.querySelectorAll('.run-checkbox').forEach(cb => {
                             cb.checked = (cb === checkbox);
-                            const parentItem = cb.closest('.run-item');
-                            if (cb.checked) {
-                                parentItem.classList.add('active');
-                            } else {
-                                parentItem.classList.remove('active');
-                            }
+                            cb.closest('.run-item').classList.toggle('active', cb.checked);
                         });
                         loadMultipleRunsData();
-                    };
-                    titleTextEl.onclick = handleSelect;
-                    detailsBoxEl.onclick = handleSelect;
+                    });
 
                     const noteDisplay = div.querySelector('.run-note-display');
                     
@@ -764,11 +710,15 @@
 
                     list.appendChild(div);
                 });
-                if (runs.length > 0) {
+
+                if (runs.length > 0 && selectedRuns.length === 0) {
                     const checkboxes = list.querySelectorAll('.run-checkbox');
                     const lastCb = checkboxes[checkboxes.length - 1];
                     lastCb.checked = true;
                     lastCb.dispatchEvent(new Event('change'));
+                } else {
+                    selectedRuns.sort((a, b) => allRuns.indexOf(a) - allRuns.indexOf(b));
+                    loadMultipleRunsData();
                 }
             } catch (err) {
                 console.error("Failed to fetch runs:", err);
@@ -790,7 +740,7 @@
             let c = '';
             if (type.includes('line')) c += `<label><input type="checkbox" id="log_${id}" onchange="updateChart('${id}')"> Log Y</label><label>Smooth: <input type="range" id="smooth_${id}" min="0" max="0.99" step="0.01" value="0" oninput="updateChart('${id}')"></label>`;
             if (layout.equal_aspect) c += `<label><input type="checkbox" id="equal_${id}" onchange="updateChart('${id}')" checked> Equal X/Y</label>`;
-            return `<div class="chart-box" id="box_${id}"><div class="chart-controls">${c}</div><div class="chart-wrapper"><div class="chart-container ${(layout.equal_aspect || type === 'heatmap')?'square-mode':''}" id="container_${id}"><canvas id="canvas_${id}"></canvas></div></div></div>`;
+            return `<div class="chart-box" id="box_${id}"><div class="chart-controls">${c}</div><div class="chart-container ${(layout.equal_aspect || type === 'heatmap')?'square-mode':''}" id="container_${id}"><canvas id="canvas_${id}"></canvas></div></div>`;
         }
 
         let currentLoadId = 0;
@@ -804,6 +754,9 @@
                 document.getElementById('run-title-display').textContent = 'No runs selected';
                 container.innerHTML = '';
                 if (warningsContainer) warningsContainer.style.display = 'none';
+                Object.values(chartInstances).forEach(c => c.destroy());
+                chartInstances = {};
+                chartConfigs = {};
                 return;
             }
 
@@ -814,14 +767,10 @@
             }
             document.getElementById('run-title-display').textContent = titleText;
 
-            container.innerHTML = '';
             if (warningsContainer) {
                 warningsContainer.style.display = 'none';
                 warningsContainer.innerHTML = '';
             }
-            Object.values(chartInstances).forEach(c => c.destroy());
-            chartInstances = {};
-            chartConfigs = {};
 
             try {
                 const nonLineMode = currentNonLine;
@@ -1010,6 +959,8 @@
                 const results = await Promise.all(runPromises);
                 if (loadId !== currentLoadId) return;
 
+                const nextChartConfigs = {};
+
                 results.forEach(res => {
                     const { run, runIdx, runCharts } = res;
                     const runName = run.experiment_name || `Experiment #${run.experiment_number || runIdx}`;
@@ -1025,30 +976,58 @@
                             }
                         }
 
-                        if (!chartConfigs[targetId]) {
-                            chartConfigs[targetId] = {
+                        if (!nextChartConfigs[targetId]) {
+                            nextChartConfigs[targetId] = {
                                 type: chartData.type,
                                 title: (nonLineMode === 'all' && !isOverlayable(chartData.type) && selectedRuns.length > 1) ? `${chartData.title} (${runName})` : chartData.title,
                                 layout: chartData.layout,
                                 series: chartData.series,
                                 dataByRun: []
                             };
-                            container.insertAdjacentHTML('beforeend', createChartDOM(targetId, chartConfigs[targetId].title, chartData.type, chartData.layout));
                         }
 
                         if (nonLineMode === 'latest' && !isOverlayable(chartData.type)) {
-                            if (chartConfigs[targetId].dataByRun.length === 0 || runIdx < chartConfigs[targetId].dataByRun[0].runIdx) {
-                                chartConfigs[targetId].dataByRun = [{ runName, runIdx, ...chartData }];
+                            if (nextChartConfigs[targetId].dataByRun.length === 0 || runIdx < nextChartConfigs[targetId].dataByRun[0].runIdx) {
+                                nextChartConfigs[targetId].dataByRun = [{ runName, runIdx, ...chartData }];
                             }
                         } else {
-                            chartConfigs[targetId].dataByRun.push({ runName, runIdx, ...chartData });
+                            nextChartConfigs[targetId].dataByRun.push({ runName, runIdx, ...chartData });
                         }
                     });
                 });
 
                 if (loadId !== currentLoadId) return;
 
-                Object.keys(chartConfigs).forEach(id => updateChart(id));
+                // Diff configs to add/remove/update charts in-place
+                const oldIds = Object.keys(chartConfigs);
+                const newIds = Object.keys(nextChartConfigs);
+
+                // 1. Remove obsolete charts
+                oldIds.forEach(id => {
+                    if (!nextChartConfigs[id]) {
+                        if (chartInstances[id]) {
+                            chartInstances[id].destroy();
+                            delete chartInstances[id];
+                        }
+                        const box = document.getElementById(`box_${id}`);
+                        if (box) box.remove();
+                        delete chartConfigs[id];
+                    }
+                });
+
+                // 2. Add or update active charts
+                newIds.forEach(id => {
+                    const newConfig = nextChartConfigs[id];
+                    const isNew = !chartConfigs[id];
+
+                    chartConfigs[id] = newConfig;
+
+                    if (isNew) {
+                        container.insertAdjacentHTML('beforeend', createChartDOM(id, newConfig.title, newConfig.type, newConfig.layout));
+                    }
+
+                    updateChart(id);
+                });
 
             } catch (err) {
                 console.error("Error loading multiple runs data:", err);
@@ -1056,59 +1035,40 @@
         }
 
 
-        function initCustomSelect(selectId, onChange) {
-            const container = document.getElementById(selectId + '-container');
-            const trigger = container.querySelector('.custom-select-trigger');
-            const triggerSpan = trigger.querySelector('span');
-            const options = container.querySelectorAll('.custom-option');
-
-            trigger.onclick = (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.custom-select').forEach(c => c !== container && c.classList.remove('open'));
-                container.classList.toggle('open');
-            };
-
-            options.forEach(opt => {
-                opt.onclick = () => {
-                    options.forEach(o => o.classList.toggle('selected', o === opt));
-                    triggerSpan.textContent = opt.textContent;
-                    container.classList.remove('open');
-                    onChange(opt.dataset.value);
-                };
-            });
-
-            return {
-                setValue(val) {
-                    options.forEach(opt => {
-                        const isSel = opt.dataset.value === val;
-                        opt.classList.toggle('selected', isSel);
-                        if (isSel) triggerSpan.textContent = opt.textContent;
-                    });
-                }
-            };
-        }
-        document.onclick = () => document.querySelectorAll('.custom-select').forEach(c => c.classList.remove('open'));
-
-        // Setup custom select dropdowns
-        themeSelect = initCustomSelect('theme-select', (val) => {
-            currentTheme = val;
+        // Setup select dropdown event listeners
+        themeSelect = document.getElementById('theme-select');
+        themeSelect.addEventListener('change', (e) => {
+            currentTheme = e.target.value;
             applyPreferences();
             saveConfig();
         });
-        fontSelect = initCustomSelect('font-select', (val) => {
-            currentFont = val;
+
+        fontSelect = document.getElementById('font-select');
+        fontSelect.addEventListener('change', (e) => {
+            currentFont = e.target.value;
             applyPreferences();
             saveConfig();
         });
-        layoutSelect = initCustomSelect('layout-select', (val) => {
-            currentLayout = val;
+
+        layoutSelect = document.getElementById('layout-select');
+        layoutSelect.addEventListener('change', (e) => {
+            currentLayout = e.target.value;
             applyLayout(true);
             saveConfig();
         });
-        nonLineSelect = initCustomSelect('non-line-select', (val) => {
-            currentNonLine = val;
+
+        nonLineSelect = document.getElementById('non-line-select');
+        nonLineSelect.addEventListener('change', (e) => {
+            currentNonLine = e.target.value;
             loadMultipleRunsData();
             saveConfig();
+        });
+
+        pollSelect = document.getElementById('poll-select');
+        pollSelect.addEventListener('change', (e) => {
+            currentPollInterval = e.target.value;
+            localStorage.setItem('poll-interval', e.target.value);
+            applyPollInterval();
         });
 
         // Sidebar Hide/Toggle Logic
@@ -1118,17 +1078,15 @@
         toggleSidebarBtn.addEventListener('click', () => {
             const isHidden = sidebar.classList.toggle('hidden');
             if (isHidden) {
-                toggleSidebarBtn.style.background = 'var(--bg-active)';
+                toggleSidebarBtn.style.background = 'var(--border-color)';
                 toggleSidebarBtn.style.borderColor = 'var(--border-active)';
             } else {
                 toggleSidebarBtn.style.background = 'none';
                 toggleSidebarBtn.style.borderColor = 'var(--border-color)';
             }
             localStorage.setItem('sidebar-hidden', isHidden);
-            // Resize charts after transition finishes
-            setTimeout(() => {
-                Object.values(chartInstances).forEach(chart => chart.resize());
-            }, 320);
+            // Resize charts immediately since sidebar animation is removed
+            Object.values(chartInstances).forEach(chart => chart.resize());
         });
 
         // Settings Modal Toggle Logic
@@ -1156,12 +1114,13 @@
             const sidebarHidden = localStorage.getItem('sidebar-hidden') === 'true';
             if (sidebarHidden) {
                 sidebar.classList.add('hidden');
-                toggleSidebarBtn.style.background = 'var(--bg-active)';
+                toggleSidebarBtn.style.background = 'var(--border-color)';
                 toggleSidebarBtn.style.borderColor = 'var(--border-active)';
             }
             
             await loadConfig();
             await fetchRuns();
+            loadPollInterval();
         }
         init();
 
@@ -1176,7 +1135,16 @@
             const heatmapBorderColor = isLightTheme ? '#ffffff' : '#333';
 
             const ctx = document.getElementById(`canvas_${id}`).getContext('2d');
-            if (chartInstances[id]) chartInstances[id].destroy();
+
+            // Destroy and recreate only if the chart type has changed
+            if (chartInstances[id]) {
+                const existingType = chartInstances[id].config.type;
+                const targetType = config.type === 'heatmap' ? 'matrix' : 'line';
+                if (existingType !== targetType) {
+                    chartInstances[id].destroy();
+                    delete chartInstances[id];
+                }
+            }
 
             const logEl = document.getElementById(`log_${id}`);
             const isLog = logEl ? logEl.checked : false;
@@ -1273,14 +1241,8 @@
                             display: true,
                             text: config.title,
                             color: textColor,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            padding: {
-                                top: 10,
-                                bottom: 10
-                            }
+                            font: { size: 16, weight: 'bold' },
+                            padding: { top: 10, bottom: 10 }
                         },
                         legend: {
                             labels: {
@@ -1317,11 +1279,36 @@
                     computeEqualAspectRange(datasets, options);
                 }
 
-                chartInstances[id] = new Chart(ctx, {
-                    type: 'line',
-                    data: { datasets: datasets },
-                    options: options
-                });
+                if (chartInstances[id]) {
+                    const chart = chartInstances[id];
+                    chart.options.scales.x.ticks.color = tickColor;
+                    chart.options.scales.x.grid.color = gridColor;
+                    chart.options.scales.y.type = isLog ? 'logarithmic' : 'linear';
+                    chart.options.scales.y.ticks.color = tickColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.options.plugins.title.text = config.title;
+                    chart.options.plugins.title.color = textColor;
+                    chart.options.plugins.legend.labels.color = textColor;
+                    chart.options.color = textColor;
+                    
+                    if (isEqual) {
+                        chart.options.maintainAspectRatio = true;
+                        chart.options.aspectRatio = 1;
+                        computeEqualAspectRange(datasets, chart.options);
+                    } else {
+                        chart.options.maintainAspectRatio = false;
+                        delete chart.options.aspectRatio;
+                    }
+
+                    chart.data.datasets = datasets;
+                    chart.update('none');
+                } else {
+                    chartInstances[id] = new Chart(ctx, {
+                        type: 'line',
+                        data: { datasets: datasets },
+                        options: options
+                    });
+                }
             }
             else if (config.type === 'heatmap') {
                 const runData = config.dataByRun[0];
@@ -1370,96 +1357,108 @@
 
                 const numClasses = classLabels.length || 1;
 
-                chartInstances[id] = new Chart(ctx, {
-                    type: 'matrix',
-                    data: {
-                        datasets: [{
-                            label: config.title,
-                            data: matrixData,
-                            backgroundColor(context) {
-                                const value = context.dataset.data[context.dataIndex].v;
-                                const alpha = maxCount > 0 ? (0.15 + 0.85 * value / maxCount) : 0;
-                                return `rgba(59, 130, 246, ${alpha})`;
-                            },
-                            borderColor: heatmapBorderColor,
-                            borderWidth: 2,
-                            width: ({ chart }) => {
-                                const area = chart.chartArea;
-                                if (!area) return 0;
-                                return (area.width / numClasses) - 4;
-                            },
-                            height: ({ chart }) => {
-                                const area = chart.chartArea;
-                                if (!area) return 0;
-                                return (area.height / numClasses) - 4;
-                            }
-                        }]
-                    },
-                    options: {
-                        animation: false, responsive: true, maintainAspectRatio: false, color: textColor,
-                        scales: {
-                            x: {
-                                type: 'category',
-                                title: { display: true, text: 'Predicted Class', color: textColor },
-                                ticks: { color: tickColor },
-                                grid: { display: false },
-                                offset: true
-                            },
-                            y: {
-                                type: 'category',
-                                title: { display: true, text: 'True Class', color: textColor },
-                                ticks: { color: tickColor },
-                                grid: { display: false },
-                                offset: true,
-                                reverse: true
-                            }
-                        },
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: config.title,
-                                color: textColor,
-                                font: {
-                                    size: 16,
-                                    weight: 'bold'
+                if (chartInstances[id]) {
+                    const chart = chartInstances[id];
+                    chart.options.scales.x.title.color = textColor;
+                    chart.options.scales.x.ticks.color = tickColor;
+                    chart.options.scales.y.title.color = textColor;
+                    chart.options.scales.y.ticks.color = tickColor;
+                    chart.options.plugins.title.text = config.title;
+                    chart.options.plugins.title.color = textColor;
+                    chart.options.color = textColor;
+                    
+                    chart.data.datasets[0].data = matrixData;
+                    chart.data.datasets[0].borderColor = heatmapBorderColor;
+                    chart.update('none');
+                } else {
+                    chartInstances[id] = new Chart(ctx, {
+                        type: 'matrix',
+                        data: {
+                            datasets: [{
+                                label: config.title,
+                                data: matrixData,
+                                backgroundColor(context) {
+                                    const dataItem = context.dataset.data[context.dataIndex];
+                                    const value = dataItem ? dataItem.v : 0;
+                                    const maxVal = Math.max(...context.dataset.data.map(d => d.v || 0), 0);
+                                    const alpha = maxVal > 0 ? (0.15 + 0.85 * value / maxVal) : 0;
+                                    return `rgba(59, 130, 246, ${alpha})`;
                                 },
-                                padding: {
-                                    top: 10,
-                                    bottom: 10
+                                borderColor: heatmapBorderColor,
+                                borderWidth: 2,
+                                width: ({ chart }) => {
+                                    const area = chart.chartArea;
+                                    if (!area) return 0;
+                                    return (area.width / numClasses) - 4;
+                                },
+                                height: ({ chart }) => {
+                                    const area = chart.chartArea;
+                                    if (!area) return 0;
+                                    return (area.height / numClasses) - 4;
+                                }
+                            }]
+                        },
+                        options: {
+                            animation: false, responsive: true, maintainAspectRatio: false, color: textColor,
+                            scales: {
+                                x: {
+                                    type: 'category',
+                                    title: { display: true, text: 'Predicted Class', color: textColor },
+                                    ticks: { color: tickColor },
+                                    grid: { display: false },
+                                    offset: true
+                                },
+                                y: {
+                                    type: 'category',
+                                    title: { display: true, text: 'True Class', color: textColor },
+                                    ticks: { color: tickColor },
+                                    grid: { display: false },
+                                    offset: true,
+                                    reverse: true
                                 }
                             },
-                            tooltip: {
-                                callbacks: {
-                                    title() { return ''; },
-                                    label(context) {
-                                        const v = context.dataset.data[context.dataIndex];
-                                        return ['True: ' + v.y, 'Pred: ' + v.x, 'Count: ' + v.v];
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: config.title,
+                                    color: textColor,
+                                    font: { size: 16, weight: 'bold' },
+                                    padding: { top: 10, bottom: 10 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        title() { return ''; },
+                                        label(context) {
+                                            const v = context.dataset.data[context.dataIndex];
+                                            return ['True: ' + v.y, 'Pred: ' + v.x, 'Count: ' + v.v];
+                                        }
                                     }
                                 }
                             }
-                        }
-                    },
-                    plugins: [{
-                        id: 'matrixText',
-                        afterDatasetsDraw(chart) {
-                            const ctx = chart.ctx;
-                            chart.data.datasets.forEach((dataset, i) => {
-                                const meta = chart.getDatasetMeta(i);
-                                meta.data.forEach((element, index) => {
-                                    const value = dataset.data[index].v;
-                                    const cellW = element.width || 0;
-                                    const cellH = element.height || 0;
-                                    const alpha = maxCount > 0 ? (0.15 + 0.85 * value / maxCount) : 0;
-                                    ctx.fillStyle = alpha > 0.55 ? '#fff' : (isLightTheme ? '#0f172a' : '#fff');
-                                    ctx.font = `bold 14px ${Chart.defaults.font.family || 'monospace'}`;
-                                    ctx.textAlign = 'center';
-                                    ctx.textBaseline = 'middle';
-                                    ctx.fillText(value, element.x + cellW / 2, element.y + cellH / 2);
+                        },
+                        plugins: [{
+                            id: 'matrixText',
+                            afterDatasetsDraw(chart) {
+                                const ctx = chart.ctx;
+                                const maxVal = Math.max(...chart.data.datasets[0].data.map(d => d.v || 0), 0);
+                                chart.data.datasets.forEach((dataset, i) => {
+                                    const meta = chart.getDatasetMeta(i);
+                                    meta.data.forEach((element, index) => {
+                                        const value = dataset.data[index].v;
+                                        const cellW = element.width || 0;
+                                        const cellH = element.height || 0;
+                                        const alpha = maxVal > 0 ? (0.15 + 0.85 * value / maxVal) : 0;
+                                        ctx.fillStyle = alpha > 0.55 ? '#fff' : (isLightTheme ? '#0f172a' : '#fff');
+                                        ctx.font = `bold 14px ${Chart.defaults.font.family || 'monospace'}`;
+                                        ctx.textAlign = 'center';
+                                        ctx.textBaseline = 'middle';
+                                        ctx.fillText(value, element.x + cellW / 2, element.y + cellH / 2);
+                                    });
                                 });
-                            });
-                        }
-                    }]
-                });
+                            }
+                        }]
+                    });
+                }
             }
         }
         // Layout change handled in setup listeners above
