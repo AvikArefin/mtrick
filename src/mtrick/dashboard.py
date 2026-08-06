@@ -104,6 +104,20 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(config).encode("utf-8"))
             return
 
+        # Serve exporter.js script
+        elif parsed_path.path == "/exporter.js":
+            self.send_response(200)
+            self.send_header("Content-type", "application/javascript; charset=utf-8")
+            self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
+            self.end_headers()
+
+            static_dir: str = os.path.join(os.path.dirname(__file__), "static")
+            exporter_path: str = os.path.join(static_dir, "exporter.js")
+
+            with open(exporter_path, "rb") as f:
+                self.wfile.write(f.read())
+            return
+
         # Serve the dashboard index for root path
         elif parsed_path.path == "/":
             self.send_response(200)

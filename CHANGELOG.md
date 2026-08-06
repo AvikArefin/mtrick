@@ -1,3 +1,7 @@
+# 0.5.0
+- Feat: high res png and svg export with color and aspect ratio edit 
+- Regress: Change plot color [temporary] introduced in 0.3.0
+
 # 0.4.0
 - Feat: live update (polling)
 

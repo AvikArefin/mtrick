@@ -1,6 +1,6 @@
 [project]
 name = "mtrick"
-version = "0.4.0"
+version = "0.6.0"
 description = "A local, zero-config ML experiment tracker"
 readme = "README.md"
 authors = [
@@ -8,11 +8,14 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = []
-license = {text = "MIT"}
+license = {text = "Apache-2.0"}
 classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Logging",
 ]
 
 [project.urls]

@@ -7,9 +7,12 @@
     <title>MTRICK</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@latest/dist/chartjs-chart-matrix.min.js"></script>
+    <script src="exporter.js"></script>
     <style>
         :root {
             /* Default/Dark Theme */
@@ -28,7 +31,7 @@
             --border-color: #e2e8f0;
             --border-active: #94a3b8;
             --text-color: #0f172a;
-            --text-muted: #64748b;
+            --text-muted: #000000;
             --bg-input: #f1f5f9;
         }
 
@@ -169,36 +172,10 @@
 
         .run-note-display[contenteditable="true"]:focus {
             border-color: #fbbf24 !important;
-            background: rgba(0,0,0,0.1) !important;
+            background: rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* Color Picker Styling */
-        .run-color-input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            background: none;
-            padding: 0;
-            outline: none;
-        }
-        .run-color-input:hover {
-            transform: scale(1.15);
-        }
-        .run-color-input::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        .run-color-input::-webkit-color-swatch {
-            border: none;
-            border-radius: 0;
-        }
-        .run-color-input::-moz-color-swatch {
-            border: none;
-            border-radius: 0;
-        }
+
 
         /* Standardized Icon Buttons */
         .icon-btn {
@@ -212,10 +189,12 @@
             justify-content: center;
             outline: none;
         }
+
         .icon-btn:hover {
             background: var(--bg-input);
             border-color: var(--border-active);
         }
+
         .icon-btn:active {
             background: var(--border-color);
         }
@@ -325,8 +304,219 @@
             cursor: pointer;
         }
 
-        select:focus {
+        /* Export Modal Styles */
+        .export-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .export-modal-backdrop.open {
+            display: flex;
+        }
+        .export-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            color: var(--text-color);
+        }
+        .export-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .export-modal-header h3 {
+            margin: 0;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+        .export-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5em;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .export-close-btn:hover {
+            color: var(--text-color);
+        }
+        .export-modal-body {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        @media (max-width: 768px) {
+            .export-modal-body {
+                flex-direction: column;
+            }
+        }
+        .export-controls-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 260px;
+        }
+        .export-preview-panel {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .export-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .export-form-group label {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .export-input, .export-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            height: auto;
+            min-height: 38px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 0.9em;
+            line-height: 1.4;
+            outline: none;
+        }
+        .export-select {
+            padding-right: 28px;
+        }
+        .export-input:focus, .export-select:focus {
             border-color: var(--border-active);
+        }
+        .export-colors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .export-color-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85em;
+        }
+        .export-color-picker {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border-color);
+            background: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .export-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+        .export-color-picker::-webkit-color-swatch { border: none; }
+        .export-preview-header {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .export-preview-container {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+            background: #0f172a;
+        }
+        .export-modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .export-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-color);
+        }
+        .export-action-btn.primary-btn {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #3b82f6;
+        }
+        .export-action-btn.primary-btn:hover {
+            background: #1d4ed8;
+        }
+        .export-action-btn.secondary-btn {
+            background: #059669;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+        .export-action-btn.secondary-btn:hover {
+            background: #047857;
+        }
+        .export-font-preset-btn {
+            padding: 4px 10px;
+            font-size: 0.8em;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .export-font-preset-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        .export-font-preset-btn.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #3b82f6;
+        }
+        .export-font-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .export-font-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .export-font-item label {
+            font-size: 0.78em;
+            color: var(--text-muted);
+        }
+        .export-action-btn.cancel-btn:hover {
+            background: var(--border-color);
         }
     </style>
 </head>
@@ -334,11 +524,13 @@
 <body>
     <div class="sidebar" id="sidebar">
         <div class="sidebar-content">
-            <h3 style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 0;">
+            <h3
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 0;">
                 Experiment Runs
             </h3>
             <button id="clear-all-btn"
-                style="margin-bottom: 15px; padding: 6px 12px; background: var(--bg-input); color: var(--text-color); border: 1px solid var(--border-color); cursor: pointer; font-family: inherit; font-size: 0.85em;">Clear All</button>
+                style="margin-bottom: 15px; padding: 6px 12px; background: var(--bg-input); color: var(--text-color); border: 1px solid var(--border-color); cursor: pointer; font-family: inherit; font-size: 0.85em;">Clear
+                All</button>
             <div id="runs-list"></div>
         </div>
     </div>
@@ -354,10 +546,13 @@
                 </button>
                 <h2 id="run-title-display" style="margin: 0;">Select runs to compare</h2>
             </div>
-            <button id="settings-btn" class="icon-btn" title="Global Settings" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; font-family: inherit; font-size: 0.9em;">
+            <button id="settings-btn" class="icon-btn" title="Global Settings"
+                style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; font-family: inherit; font-size: 0.9em;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
                 </svg>
                 Settings
             </button>
@@ -436,8 +631,6 @@
         let chartInstances = {};
         let chartConfigs = {};
 
-        // Stores custom visualization colors assigned to run folders
-        const customRunColors = {};
 
         let currentTheme = 'dark';
         let currentFont = 'monospace';
@@ -458,12 +651,12 @@
                     currentFont = config.font || 'monospace';
                     currentLayout = config.layout || 'auto';
                     currentNonLine = config.nonLine || 'latest';
-                    
+
                     if (themeSelect) themeSelect.value = currentTheme;
                     if (fontSelect) fontSelect.value = currentFont;
                     if (layoutSelect) layoutSelect.value = currentLayout;
                     if (nonLineSelect) nonLineSelect.value = currentNonLine;
-                    
+
                     applyLayout(false);
                     applyPreferences(false); // don't redraw charts during initial load since they aren't created yet
                 }
@@ -504,11 +697,11 @@
                 await fetch('/api/config', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        theme: currentTheme, 
-                        font: currentFont, 
-                        layout: currentLayout, 
-                        nonLine: currentNonLine 
+                    body: JSON.stringify({
+                        theme: currentTheme,
+                        font: currentFont,
+                        layout: currentLayout,
+                        nonLine: currentNonLine
                     })
                 });
             } catch (err) {
@@ -632,8 +825,8 @@
                     div.className = 'run-item';
                     const scriptText = run.source_script ? ` &bull; <span style="color: #a855f7;">${esc(run.source_script)}</span>` : '';
                     const noteText = run.note || '';
-                    const runColor = customRunColors[run.folder] || RUN_COLORS[index % RUN_COLORS.length];
-                    
+                    const runColor = RUN_COLORS[index % RUN_COLORS.length];
+
                     const shouldBeChecked = selectedFolders.has(run.folder);
                     if (shouldBeChecked) {
                         div.classList.add('active');
@@ -643,12 +836,12 @@
                     div.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
                             <input type="checkbox" class="run-checkbox" value="${index}" style="cursor: pointer; margin: 0; flex-shrink: 0;" ${shouldBeChecked ? 'checked' : ''}>
-                            <input type="color" class="run-color-input" value="${runColor}" title="Change color for visualization" style="margin: 0; flex-shrink: 0;">
+                            <span style="width: 12px; height: 12px; background-color: ${runColor}; flex-shrink: 0; display: inline-block;"></span>
                             <b class="run-title-text" style="flex: 1; word-break: break-word; cursor: pointer; font-size: 1.0em; padding-left: 2px;">${esc(run.experiment_name) || 'Experiment'} #${esc(run.experiment_number) || '?'}</b>
                         </div>
                         <div class="run-details-box" style="margin-top: 6px; cursor: pointer;">
                             <div style="font-size: 0.75em; color: var(--text-muted); white-space: nowrap; overflow: hidden;">
-                                ${esc((run.timestamp||'').replace(/(....)(..)(..)_(..)(..)(..)/, "$1-$2-$3 $4:$5:$6"))} &bull; ${esc(run.git_commit)}${scriptText}
+                                ${esc((run.timestamp || '').replace(/(....)(..)(..)_(..)(..)(..)/, "$1-$2-$3 $4:$5:$6"))} &bull; ${esc(run.git_commit)}${scriptText}
                             </div>
                             <div class="run-note-container" style="margin-top: 8px; font-size: 0.85em;">
                                 <div class="run-note-display" contenteditable="true" data-placeholder="Add a note..." style="word-break: break-word; padding: 4px 6px; background: rgba(0,0,0,0.2); border: 1px dashed transparent; min-height: 1.2em; border-radius: 0; outline: none; cursor: text; line-height: 1.2;">${esc(noteText)}</div>
@@ -668,18 +861,8 @@
                         loadMultipleRunsData();
                     });
 
-                    const colorInput = div.querySelector('.run-color-input');
-                    colorInput.addEventListener('change', (e) => {
-                        customRunColors[run.folder] = e.target.value;
-                        // Redraw charts immediately
-                        Object.keys(chartConfigs).forEach(id => updateChart(id));
-                    });
-                    colorInput.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                    });
-
                     div.addEventListener('click', (e) => {
-                        if (e.target.closest('.run-checkbox') || e.target.closest('.run-color-input') || e.target.closest('.run-note-display')) {
+                        if (e.target.closest('.run-checkbox') || e.target.closest('.run-note-display')) {
                             return;
                         }
                         selectedRuns = [run];
@@ -691,7 +874,7 @@
                     });
 
                     const noteDisplay = div.querySelector('.run-note-display');
-                    
+
                     noteDisplay.addEventListener('click', e => e.stopPropagation());
                     noteDisplay.addEventListener('keydown', e => {
                         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); noteDisplay.blur(); }
@@ -736,11 +919,12 @@
 
 
 
-        function createChartDOM(id, title, type, layout={}) {
+        function createChartDOM(id, title, type, layout = {}) {
             let c = '';
             if (type.includes('line')) c += `<label><input type="checkbox" id="log_${id}" onchange="updateChart('${id}')"> Log Y</label><label>Smooth: <input type="range" id="smooth_${id}" min="0" max="0.99" step="0.01" value="0" oninput="updateChart('${id}')"></label>`;
             if (layout.equal_aspect) c += `<label><input type="checkbox" id="equal_${id}" onchange="updateChart('${id}')" checked> Equal X/Y</label>`;
-            return `<div class="chart-box" id="box_${id}"><div class="chart-controls">${c}</div><div class="chart-container ${(layout.equal_aspect || type === 'heatmap')?'square-mode':''}" id="container_${id}"><canvas id="canvas_${id}"></canvas></div></div>`;
+            c += `<button class="icon-btn export-btn" onclick="ChartExporter.openExportModal('${id}')" title="Export Image (4K PNG / SVG)" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; font-size: 0.8em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Export</button>`;
+            return `<div class="chart-box" id="box_${id}"><div class="chart-controls">${c}</div><div class="chart-container ${(layout.equal_aspect || type === 'heatmap') ? 'square-mode' : ''}" id="container_${id}"><canvas id="canvas_${id}"></canvas></div></div>`;
         }
 
         let currentLoadId = 0;
@@ -856,7 +1040,7 @@
                         if (filename.endsWith('.jsonl')) {
                             // Parse JSONL file
                             const jsonObjects = rows.map(line => {
-                                try { return JSON.parse(line); } catch(e) { return null; }
+                                try { return JSON.parse(line); } catch (e) { return null; }
                             }).filter(obj => obj !== null);
 
                             if (jsonObjects.length === 0) continue;
@@ -1074,7 +1258,7 @@
         // Sidebar Hide/Toggle Logic
         const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
         const sidebar = document.getElementById('sidebar');
-        
+
         toggleSidebarBtn.addEventListener('click', () => {
             const isHidden = sidebar.classList.toggle('hidden');
             if (isHidden) {
@@ -1117,7 +1301,7 @@
                 toggleSidebarBtn.style.background = 'var(--border-color)';
                 toggleSidebarBtn.style.borderColor = 'var(--border-active)';
             }
-            
+
             await loadConfig();
             await fetchRuns();
             loadPollInterval();
@@ -1130,7 +1314,7 @@
 
             const isLightTheme = currentTheme === 'light';
             const textColor = isLightTheme ? '#0f172a' : '#eee';
-            const tickColor = isLightTheme ? '#64748b' : '#aaa';
+            const tickColor = isLightTheme ? '#000000' : '#FFFFFF';
             const gridColor = isLightTheme ? '#e2e8f0' : '#333';
             const heatmapBorderColor = isLightTheme ? '#ffffff' : '#333';
 
@@ -1167,7 +1351,7 @@
                 config.dataByRun.forEach(runData => {
                     const runName = runData.runName;
                     const run = allRuns[runData.runIdx];
-                    const c = (run && customRunColors[run.folder]) || RUN_COLORS[runData.runIdx % RUN_COLORS.length];
+                    const c = RUN_COLORS[runData.runIdx % RUN_COLORS.length];
                     const c_raw = c + '40';
 
                     if (config.type === 'line' || config.type === 'line_multi') {
@@ -1190,8 +1374,11 @@
 
                             let label = config.dataByRun.length > 1 && config.type === 'line_multi' ? `${seriesName} (${runName})` : seriesName;
                             let rawLabel = config.dataByRun.length > 1 ? `${seriesName} (${config.type === 'line_multi' ? runName + ' ' : ''}Raw)` : `${seriesName === 'Value' ? '' : seriesName + ' '}Raw`;
-                            // For single-series line with single run, use cleaner labels
-                            if (config.type === 'line' && config.dataByRun.length === 1) { label = 'Smoothed'; rawLabel = 'Raw'; }
+                            // For single-series line with single run, use title/runName when smoothWeight is 0, and Smoothed/Raw when smoothing is active
+                            if (config.type === 'line' && config.dataByRun.length === 1) {
+                                label = smoothWeight > 0 ? 'Smoothed' : (config.title || runName);
+                                rawLabel = 'Raw';
+                            }
 
                             if (smoothWeight > 0) datasets.push({ label: rawLabel, data: rawPoints, borderColor: c_raw, backgroundColor: c_raw, borderWidth: 1, pointRadius: 0, showLine: true, borderDash: dash });
                             datasets.push({ label: label, data: smoothedPoints, borderColor: c, backgroundColor: c, borderWidth: 2, pointRadius: smoothWeight > 0 ? 0 : 1.5, showLine: true, borderDash: dash });
@@ -1290,7 +1477,7 @@
                     chart.options.plugins.title.color = textColor;
                     chart.options.plugins.legend.labels.color = textColor;
                     chart.options.color = textColor;
-                    
+
                     if (isEqual) {
                         chart.options.maintainAspectRatio = true;
                         chart.options.aspectRatio = 1;
@@ -1316,7 +1503,7 @@
 
                 const rows = runData.raw_csv.trim().split('\n');
                 const jsonObjects = rows.map(line => {
-                    try { return JSON.parse(line); } catch(e) { return null; }
+                    try { return JSON.parse(line); } catch (e) { return null; }
                 }).filter(obj => obj !== null);
 
                 if (jsonObjects.length === 0) return;
@@ -1366,7 +1553,7 @@
                     chart.options.plugins.title.text = config.title;
                     chart.options.plugins.title.color = textColor;
                     chart.options.color = textColor;
-                    
+
                     chart.data.datasets[0].data = matrixData;
                     chart.data.datasets[0].borderColor = heatmapBorderColor;
                     chart.update('none');

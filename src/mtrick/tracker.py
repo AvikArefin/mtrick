@@ -1,8 +1,10 @@
 import os
 import re
 import json
+import warnings
 import subprocess
 from datetime import datetime
+from typing import Any
 
 class Tracker:
     def __init__(
@@ -77,7 +79,7 @@ class Tracker:
         epoch: int,
     ):
         """
-        Simplified logging API.
+        Logs 1D metrics. Useful for loss, accuracy etc curves.
         """
         formatted_metrics = ", ".join(f"{k}: {v:.4f}" for k, v in metrics.items())
         print(f"{epoch:4d}| {formatted_metrics}")
@@ -87,7 +89,35 @@ class Tracker:
         with open(metrics_path, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
-        
+    def log_2d(
+        self,
+        data: dict[str, list[list[float]]] | None = None,
+        epoch: int | None = None,
+        filename: str = "2d.jsonl",
+        **kwargs: list[list[float]],
+    ):
+        """
+        Logs 2D spatial points/lines to a JSONL file.
+        Keys using '/' (e.g., 'data/true', 'data/pred') can be grouped into the same chart.
+        [visible via xscope library only]
+        """
+        merged_data: dict[str, list[list[float]]] = {}
+        if data:
+            merged_data.update(data)
+        if kwargs:
+            merged_data.update(kwargs)
+
+        formatted_data: dict[str, Any] = {}
+        if epoch is not None:
+            formatted_data["epoch"] = epoch
+
+        for key, points in merged_data.items():
+            formatted_data[key] = [[float(p[0]), float(p[1])] for p in points]
+
+        jsonl_path = os.path.join(self.experiment_dir, filename)
+        with open(jsonl_path, "a") as f:
+            f.write(json.dumps(formatted_data) + "\n")
+
 
     def log_trajectory(
         self,
@@ -99,6 +129,11 @@ class Tracker:
         true_data: numpy array of shape (seq_len, 2+)
         pred_data: numpy array of shape (seq_len, 2+)
         """
+        warnings.warn(
+            "log_trajectory is deprecated and will be removed in a future release. Use log_2d instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         data: dict[str, list[list[float]]] = {
             "true": [[float(p[0]), float(p[1])] for p in true_data],
             "pred": [[float(p[0]), float(p[1])] for p in pred_data]
@@ -109,6 +144,40 @@ class Tracker:
 
         with open(json_path, "w") as f:
             json.dump(data, f)
+
+
+    def log_matrix(
+        self,
+        matrix: Any,
+        labels: list[str] | None = None,
+        step: int | None = None,
+        filename: str = "matrix.jsonl",
+    ):
+        """
+        Logs a 2D matrix (e.g. confusion matrix) to a JSONL file.
+        matrix: 2D numpy array, PyTorch tensor, or nested list [row][col]
+        labels: List of string labels for rows/columns.
+        step: Optional evaluation step or epoch index.
+        filename: JSONL filename to append matrix records.
+        """
+        if hasattr(matrix, "tolist"):
+            raw_matrix = matrix.tolist()
+        else:
+            raw_matrix = [list(row) for row in matrix]
+
+        if labels is None:
+            labels = [f"Class {i}" for i in range(len(raw_matrix))]
+
+        formatted_data: dict[str, Any] = {}
+        if step is not None:
+            formatted_data["step"] = step
+
+        formatted_data["labels"] = labels
+        formatted_data["matrix"] = raw_matrix
+
+        jsonl_path = os.path.join(self.experiment_dir, filename)
+        with open(jsonl_path, "a") as f:
+            f.write(json.dumps(formatted_data) + "\n")
 
 
     def log_confusion_matrix(
@@ -123,6 +192,11 @@ class Tracker:
         matrix_data: 2D numpy array or nested list [true_class][pred_class]
         classes: List of string labels for the classes.
         """
+        warnings.warn(
+            "log_confusion_matrix is deprecated and will be removed in a future release. Use log_matrix instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         jsonl_path = os.path.join(self.experiment_dir, filename)
         num_classes = len(matrix_data)
         if classes is None:
@@ -141,3 +215,4 @@ class Tracker:
                     f.write(json.dumps(row) + "\n")
 
         print(f"Saved confusion matrix: {jsonl_path}")
+
