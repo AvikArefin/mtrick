@@ -56,7 +56,5 @@ def main():
         ]
         tracker.log_matrix(matrix, labels=classes, step=step)
 
-    print("You can now launch the dashboard to visualize this run.")
-
 if __name__ == "__main__":
     main()

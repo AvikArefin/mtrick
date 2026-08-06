@@ -21,9 +21,6 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/AvikArefin/mtrick"
 
-[project.scripts]
-mtrick = "mtrick.dashboard:main"
-
 [build-system]
 requires = ["uv_build>=0.10.4,<0.11.0"]
 build-backend = "uv_build"

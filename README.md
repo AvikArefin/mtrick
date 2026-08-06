@@ -1,8 +1,6 @@
 # mtrick: Metrics Tracker
 A local simple ML experiment tracker with zero configurations required.
 
-![Dashboard Interface](https://raw.githubusercontent.com/AvikArefin/mtrick/main/interface.png)
-
 ## Installation
 
 ```
@@ -27,31 +25,35 @@ pip install git+https://github.com/AvikArefin/mtrick.git
 
 ## Usage
 
-Code:
+Initialize tracker:
 ```python
 from mtrick import Tracker
-t = Tracker("exp")
-t.log({"loss": 0.1}, epoch=1)
+t = Tracker("exp_name")
 ```
 
-Group with `/`:
+Scalar metrics (epoch-based curves):
 ```python
-t.log({"loss/train": 0.1, "loss/val": 0.2}, epoch=1)
+t.log({"loss/train": 0.1, "loss/val": 0.2, "accuracy": 0.95}, epoch=1)
 ```
 
-Confusion Matrix:
+2D Spatial Points & Trajectories:
 ```python
-t.log_confusion_matrix([[9, 1], [2, 8]], ["Cat", "Dog"])
+t.log_2d(
+    data={
+        "data/true": [[1.0, 2.0], [2.0, 3.0]],
+        "data/pred": [[1.1, 1.9], [2.1, 3.1]],
+    },
+    epoch=1
+)
 ```
 
-Real vs Pred:
+Matrices (Confusion Matrix):
 ```python
-t.log_trajectory([[1.0, 2.0]], [[1.1, 1.9]])
-```
-
-UI:
-```bash
-uv run mtrick
+t.log_matrix(
+    matrix=[[9, 1], [2, 8]],
+    labels=["Cat", "Dog"],
+    step=1
+)
 ```
 
 ## Changelog

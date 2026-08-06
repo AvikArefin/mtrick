@@ -1,7 +1,6 @@
 import os
 import re
 import json
-import warnings
 import subprocess
 from datetime import datetime
 from typing import Any
@@ -119,33 +118,6 @@ class Tracker:
             f.write(json.dumps(formatted_data) + "\n")
 
 
-    def log_trajectory(
-        self,
-        true_data: list[list[float]],
-        pred_data: list[list[float]],
-    ):
-        """
-        Saves a 2D trajectory of ground truth vs predicted data to a JSON file.
-        true_data: numpy array of shape (seq_len, 2+)
-        pred_data: numpy array of shape (seq_len, 2+)
-        """
-        warnings.warn(
-            "log_trajectory is deprecated and will be removed in a future release. Use log_2d instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        data: dict[str, list[list[float]]] = {
-            "true": [[float(p[0]), float(p[1])] for p in true_data],
-            "pred": [[float(p[0]), float(p[1])] for p in pred_data]
-        }
-
-        filename = "trajectory.json"
-        json_path = os.path.join(self.experiment_dir, filename)
-
-        with open(json_path, "w") as f:
-            json.dump(data, f)
-
-
     def log_matrix(
         self,
         matrix: Any,
@@ -178,41 +150,4 @@ class Tracker:
         jsonl_path = os.path.join(self.experiment_dir, filename)
         with open(jsonl_path, "a") as f:
             f.write(json.dumps(formatted_data) + "\n")
-
-
-    def log_confusion_matrix(
-        self,
-        matrix_data,
-        classes=None,
-        title="Confusion Matrix",
-        filename="confusion.jsonl",
-    ):
-        """
-        Saves a confusion matrix to JSONL.
-        matrix_data: 2D numpy array or nested list [true_class][pred_class]
-        classes: List of string labels for the classes.
-        """
-        warnings.warn(
-            "log_confusion_matrix is deprecated and will be removed in a future release. Use log_matrix instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        jsonl_path = os.path.join(self.experiment_dir, filename)
-        num_classes = len(matrix_data)
-        if classes is None:
-            classes = [f"Class {i}" for i in range(num_classes)]
-
-        with open(jsonl_path, "w") as f:
-            for i in range(num_classes):
-                for j in range(num_classes):
-                    row = {
-                        "true_class": i,
-                        "pred_class": j,
-                        "count": int(matrix_data[i][j]),
-                        "true_label": str(classes[i]),
-                        "pred_label": str(classes[j])
-                    }
-                    f.write(json.dumps(row) + "\n")
-
-        print(f"Saved confusion matrix: {jsonl_path}")
 

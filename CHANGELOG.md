@@ -1,3 +1,12 @@
+# 0.6.0
+If you are upgrading to this version from any previous version please mail me over at avik.me.arefin@gmail.com
+
+Please use `xscope` mtrick. uv add xscope | https://pypi.org/project/xscope/
+`mtrick` is now a logging only library and `xscope` is visualization only tool
+
+- Breaking: Remove dashboard web UI and CLI entrypoint (mtrick is now a logging-only library)
+- Breaking: Remove deprecated `log_trajectory` and `log_confusion_matrix` methods from `Tracker`
+
 # 0.5.0
 - Feat: high res png and svg export with color and aspect ratio edit 
 - Regress: Change plot color [temporary] introduced in 0.3.0
