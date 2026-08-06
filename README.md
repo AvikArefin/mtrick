@@ -1,6 +1,8 @@
 # mtrick: Metrics Tracker
 A local simple ML experiment tracker with zero configurations required.
 
+Best used with https://pypi.org/project/xscope/ visualizer
+
 ## Installation
 
 ```
