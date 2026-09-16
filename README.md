@@ -60,3 +60,8 @@ t.log_matrix(
 
 ## Changelog
 [See CHANGELOG.md](https://github.com/AvikArefin/mtrick/blob/main/CHANGELOG.md)
+
+## Presented by Cortex Technologies
+
+`mtrick` is presented by [Cortex Technologies](https://cortextech.dev), the engineering studio built to take your products from idea to device. Cortex brings together Machine Vision, Hardware, and AIoT embedded systems expertise to turn concepts into 'works-like' MVP prototype devices.
+

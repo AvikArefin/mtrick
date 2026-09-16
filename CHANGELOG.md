@@ -1,5 +1,14 @@
+# 0.6.2
+
+- Chore: Add Cortex Technologies attribution to the README
+- Chore: Remove the outdated upgrade-contact notice
+
+# 0.6.1
+
+- Fix: Correct PyPI package classifiers
+- Docs: Update installation guidance in the README
+
 # 0.6.0
-If you are upgrading to this version from any previous version please mail me over at avik.me.arefin@gmail.com
 
 Please use `xscope` mtrick. uv add xscope | https://pypi.org/project/xscope/
 `mtrick` is now a logging only library and `xscope` is visualization only tool
