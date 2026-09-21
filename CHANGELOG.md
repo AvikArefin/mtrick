@@ -1,3 +1,7 @@
+# 0.7.0
+
+- Feat: `Tracker(note=...)` saves the note as `note.txt` in the run directory
+
 # 0.6.2
 
 - Chore: Add Cortex Technologies attribution to the README

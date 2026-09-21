@@ -10,6 +10,7 @@ class Tracker:
         self,
         experiment_name: str,
         save_path: str = "metrics",
+        note: str | None = None,
     ):
         self.experiment_name = experiment_name
         self.save_path = save_path
@@ -40,6 +41,10 @@ class Tracker:
         }
         with open(os.path.join(self.experiment_dir, "meta.json"), "w") as f:
             json.dump(self.meta, f, indent=4)
+
+        if note is not None:
+            with open(os.path.join(self.experiment_dir, "note.txt"), "w") as f:
+                f.write(note)
 
         print(f"Tracking experiment at: {self.experiment_dir}")
 
