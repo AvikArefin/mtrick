@@ -1,3 +1,20 @@
+# 0.8.0
+
+- Feat: `Tracker(config=...)` saves hyperparameters to `config.json` (nested dicts flattened to `a.b` keys)
+- Feat: run status in `status.json`: `running`, then `finished`, `crashed` (with the error message) or `interrupted`; set automatically at exit, or via `finish()` / `with Tracker(...)`
+- Feat: every record gets a `_time` wall-clock timestamp
+- Feat: `Tracker(system_metrics=True)` logs `sys/peak_rss_gb` (and `sys/gpu_mem_gb` when torch with CUDA is in use), with no new dependencies
+- Feat: `log_calibration(confidences, correct, step)` stores a reliability histogram for calibration diagnostics
+- Feat: `Tracker(group=...)` prefixes the run directory with the group (`v3_exp005_name_...`) and saves it in `meta.json`
+- Breaking: a run refuses to start with uncommitted changes or outside a git repository; pass
+  `Tracker(require_clean=False)` for the old behaviour
+- Feat: `log_text(texts, epoch)` stores short pieces of text (e.g. sample predictions) in `text.jsonl`
+- Fix: `log()` no longer crashes on non-numeric values
+- Fix: `log()` no longer crashes on 0-d tensors and numpy scalars; whole numbers are printed without decimals
+- Fix: files under the metrics directory no longer mark a run's commit as dirty (`*`)
+- Fix: `finish()` puts back the exception hook it replaced
+- Fix: git's "not a git repository" message is no longer printed outside git repos
+
 # 0.7.0
 
 - Feat: `Tracker(note=...)` saves the note as `note.txt` in the run directory

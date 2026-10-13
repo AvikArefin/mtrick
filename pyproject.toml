@@ -1,6 +1,6 @@
 [project]
 name = "mtrick"
-version = "0.7.0"
+version = "0.8.0"
 description = "A local, zero-config ML experiment tracker"
 readme = "README.md"
 authors = [
@@ -25,3 +25,8 @@ Repository = "https://github.com/AvikArefin/mtrick"
 [build-system]
 requires = ["uv_build>=0.10.4,<0.11.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
