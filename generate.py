@@ -7,7 +7,7 @@ def main():
     # 1. Initialize the tracker
     # This automatically creates a new run directory inside 'metrics'
     print("Initializing Tracker...")
-    tracker = Tracker(experiment_name="demo_run")
+    tracker = Tracker(experiment_name="demo_run", require_clean=False)   # a demo: runs with uncommitted changes too
 
     # 2. Simulate training loop and log metrics
     print("Simulating 50 epochs of training...")
